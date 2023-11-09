@@ -85,7 +85,7 @@ class _Slide extends StatelessWidget {
 
                   // implementat la funcionalidad de la navegacion
                   return GestureDetector(
-                    onTap: () => context.push('/movie/${movie.id}'),  // navegacion a la otra pantalla 
+                    onTap: () => context.push('/home/0/movie/${movie.id}'),  // navegacion a la otra pantalla 
                     child: FadeIn(child: child),
                   );
                   
