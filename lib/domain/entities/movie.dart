@@ -1,6 +1,15 @@
 
+import 'package:isar/isar.dart';
+
 // definicion de reglas de negocio y primera estructura de datos en la app
+
+part 'movie.g.dart';
+
+@collection
 class Movie {
+
+  Id? isarId;
+
   final bool adult;
   final String backdropPath;
   final List<String> genreIds;
