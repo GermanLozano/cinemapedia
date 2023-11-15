@@ -5,6 +5,7 @@ import 'package:cinemapedia/presentation/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cinemapedia/presentation/providers/providers.dart';
+import 'package:go_router/go_router.dart';
 
 class FavoritesView extends ConsumerStatefulWidget {
   const FavoritesView({super.key});
@@ -47,6 +48,30 @@ class FavoritesViewState extends ConsumerState<FavoritesView> {
 
     // leemos el Mapa de peliculas y lo convertimos en una lista 
     final favoriteMovies = ref.watch(favoriteMoviesProvider).values.toList();
+
+    // si la lista de favoritos esta vacia, entonces mostramos un mensaje de que esta vacia
+    if(favoriteMovies.isEmpty){
+      final colors = Theme.of(context).colorScheme;
+
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Icon(Icons.favorite_border_sharp, size: 60, color: colors.primary,),
+            Text('Ohhh no!', style: TextStyle(fontSize: 30, color: colors.primary)),
+            const Text('No tienes peliculas favoriras', style: TextStyle(fontSize: 20, color: Colors.black45)),
+            
+            const SizedBox(height: 20),
+
+            FilledButton.tonal(
+              onPressed: () => context.go('/home/0'), 
+              child: const Text('Empieza a burcar')
+            )
+          ],
+        ),
+      );
+    }
 
     return Scaffold(
       body: MovieMasonry(movies: favoriteMovies)

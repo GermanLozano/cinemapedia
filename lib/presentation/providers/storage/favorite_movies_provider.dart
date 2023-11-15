@@ -25,7 +25,7 @@ class StorageMoviesNotifier extends StateNotifier<Map<int, Movie>> {
 
   Future<List<Movie>> loadNextPage() async{
 
-    final movies = await localStorageRepository.loadMovies(offset: page*10); // TODO limit 10
+    final movies = await localStorageRepository.loadMovies(offset: page*10, limit: 20);
     page ++;
 
     final tempMovieMap = <int, Movie>{};
@@ -37,6 +37,23 @@ class StorageMoviesNotifier extends StateNotifier<Map<int, Movie>> {
     state = {...state, ...tempMovieMap};
 
     return movies;
+  }
+
+  // metodo para agregar o eliminar peliculas favoritas automaticamente 
+  Future<void> toggleFavorite(Movie movie) async{
+    await localStorageRepository.toggleFavorite(movie);
+
+    // esto quiere decir si la pelicula existe o no 
+    final bool isMovieInFavorites = state[movie.id] != null ;
+
+    // entonces preguntamos 
+    if( isMovieInFavorites ){
+      state.remove(movie.id);
+      state = {...state };
+    }else{
+      state = {...state, movie.id: movie};
+    }
+
   }
 
 }
