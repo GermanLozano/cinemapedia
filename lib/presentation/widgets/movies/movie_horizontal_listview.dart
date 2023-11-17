@@ -1,55 +1,83 @@
 // esta clase nos permite crear la lista de peliculas que estaran
-// de manera horizontal, debajo del carrusel 
+// de manera horizontal, debajo del carrusel
 
-import 'package:animate_do/animate_do.dart';
-import 'package:cinemapedia/config/helpers/human_formats.dart';
-import 'package:cinemapedia/domain/entities/movie.dart';
+import 'package:cinemapedia/presentation/widgets/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:animate_do/animate_do.dart';
+import 'package:cinemapedia/domain/entities/movie.dart';
 import 'package:go_router/go_router.dart';
 
-class MovieHorizontalListview extends StatelessWidget {
+class MovieHorizontalListview extends StatefulWidget {
   // argumentos a ocupar para que se lo mas flexible posible
-    final List<Movie> movies;
-    final String? title;
-    final String? subtitle;
-    final VoidCallback? loadNextpage; // para el infinity scrool
-    
-  const MovieHorizontalListview({
-    super.key, 
-    required this.movies, 
-    this.title, 
-    this.subtitle, 
-    this.loadNextpage
+  final List<Movie> movies;
+  final String? title;
+  final String? subtitle;
+  final VoidCallback? loadNextpage; // para el infinity scrool
+
+  const MovieHorizontalListview(
+      {super.key,
+      required this.movies,
+      this.title,
+      this.subtitle,
+      this.loadNextpage});
+
+  @override
+  State<MovieHorizontalListview> createState() =>
+      _MovieHorizontalListviewState();
+}
+
+class _MovieHorizontalListviewState extends State<MovieHorizontalListview> {
+  // se implementa un ScrollControler
+  final scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    scrollController.addListener(() {
+      if (widget.loadNextpage == null) return;
+
+      if ((scrollController.position.pixels + 200) >=
+          scrollController.position.maxScrollExtent) {
+        widget.loadNextpage!();
+      }
     });
+  }
+
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    
     return SizedBox(
       height: 350,
       child: Column(
         children: [
-          if (title != null || subtitle != null )
-            _Title(title: title, subtitle: subtitle,),
-
+          if (widget.title != null || widget.subtitle != null)
+            _Title(
+              title: widget.title,
+              subtitle: widget.subtitle,
+            ),
           Expanded(
             child: ListView.builder(
-              itemCount: movies.length,
+              controller: scrollController,
+              itemCount: widget.movies.length,
               scrollDirection: Axis.horizontal,
               physics: const BouncingScrollPhysics(),
               itemBuilder: (context, index) {
-                return FadeInRight(child: _Slide(movie: movies[index]));
+                return FadeInRight(child: _Slide(movie: widget.movies[index]));
               },
             ),
           )
-
         ],
       ),
     );
   }
 }
 
-// se crea el wigedt del slider que llamamos arriba 
+// se crea el wigedt del slider que llamamos arriba
 class _Slide extends StatelessWidget {
   final Movie movie;
 
@@ -57,7 +85,6 @@ class _Slide extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     final textStyle = Theme.of(context).textTheme;
 
     return Container(
@@ -65,39 +92,29 @@ class _Slide extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-
           //* esto es la imagen
-          SizedBox(   // confifuraciones para mostrar la img de la pelucula
+          SizedBox(
+            // confifuraciones para mostrar la img de la pelucula
             width: 150,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(20),
-              child: Image.network(    // se manda a llamar a la pelicula
-                movie.posterPath,
-                fit: BoxFit.cover,    // para corregir los distintos tamallos de la img de las peliculas
-                width: 150,
-                loadingBuilder: (context, child, loadingProgress) {
-                  if(loadingProgress != null) {
-                    return const Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Center(child: CircularProgressIndicator(strokeWidth: 2,)),
-                    );
-                  }
-
-                  // implementat la funcionalidad de la navegacion
-                  return GestureDetector(
-                    onTap: () => context.push('/home/0/movie/${movie.id}'),  // navegacion a la otra pantalla 
-                    child: FadeIn(child: child),
-                  );
-                  
-                },
+              child: GestureDetector(
+                onTap: () => context.push('/home/0/movie/${movie.id}'),
+                child: FadeInImage(
+                    height: 220,
+                    fit: BoxFit.cover,
+                    placeholder:
+                        const AssetImage('assets/loaders/bottle-loader.gif'),
+                    image: NetworkImage(movie.posterPath)),
               ),
             ),
           ),
 
-          const SizedBox( height: 5),
+          const SizedBox(height: 5),
 
           //* Title
-          SizedBox( // configuracion del titulo de la pelicula 
+          SizedBox(
+            // configuracion del titulo de la pelicula
             width: 150,
             child: Text(
               movie.title,
@@ -106,45 +123,26 @@ class _Slide extends StatelessWidget {
             ),
           ),
 
-          //* Rating 
-          SizedBox(
-            width: 150,
-            child: Row(   // configuracioin de la estrlla de rating 
-              children: [
-                Icon(Icons.star_half_outlined, color: Colors.yellow.shade800),
-                const SizedBox(width: 3),
-                Text('${movie.voteAverage}', style: textStyle.bodyMedium?.copyWith(color: Colors.yellow.shade800),),
-                //const SizedBox(width: 10),
-                const Spacer(),
-                Text(HumanFormats.number(movie.popularity), style: textStyle.bodySmall), // muestra la cantidad de votos con formato de la popularidad de la pelicula
-              
-              ],
-            ),
-          )
-
+          //* Rating
+          MovieRating(voteAverage: movie.voteAverage),
         ],
       ),
     );
   }
 }
 
-
-// se crea un widgets unico para el titulo 
+// se crea un widgets unico para el titulo
 class _Title extends StatelessWidget {
-
-  // Argumentos que vamos a ocupar 
+  // Argumentos que vamos a ocupar
   final String? title;
   final String? subtitle;
 
-  const _Title({
-    this.title, 
-    this.subtitle
-  });
+  const _Title({this.title, this.subtitle});
 
   @override
   Widget build(BuildContext context) {
-    // para darle estilo al titulo ocupamos 
-    final titleStyle =Theme.of(context).textTheme.titleLarge;
+    // para darle estilo al titulo ocupamos
+    final titleStyle = Theme.of(context).textTheme.titleLarge;
 
     return Container(
       padding: const EdgeInsets.only(top: 10),
@@ -152,18 +150,16 @@ class _Title extends StatelessWidget {
       child: Row(
         children: [
           // el titulo y el subtitulo son enviados desde el home_screen
-          if (title != null )
-            Text(title!, style: titleStyle),
+          if (title != null) Text(title!, style: titleStyle),
 
-            const Spacer(),
-          
-          if (subtitle != null )
+          const Spacer(),
+
+          if (subtitle != null)
             FilledButton.tonal(
-              style: const ButtonStyle(visualDensity: VisualDensity()),
-              onPressed: (){}, 
+              style: const ButtonStyle(visualDensity: VisualDensity.compact),
+              onPressed: () {},
               child: Text(subtitle!),
             )
-
         ],
       ),
     );

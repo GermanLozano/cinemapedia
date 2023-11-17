@@ -9,7 +9,7 @@ class FullScreenLoader extends StatelessWidget {
       final messages = <String>[
       'Cargando peliculas',
       'Comprando palomitas de maiz ',
-      'Cargando Ppopulares ',
+      'Cargando Populares ',
       'Llamando a mi novia',
       'Ya mero...',
       'Esto esta tardando mas de lo normal :('

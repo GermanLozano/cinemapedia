@@ -14,7 +14,7 @@ final actorsByMovieProvider = StateNotifierProvider<ActorsByMovieNotifier, Map<S
 });
 
 
-// funcion que regresa alfo especifico 
+// funcion que regresa algo especifico 
 typedef GetActorsCallback = Future<List<Actor>>Function(String movieId);
 
 class ActorsByMovieNotifier extends StateNotifier<Map<String, List<Actor>>>{

@@ -1,6 +1,6 @@
 // clase para la implementacion del DataBase y el Repositorio del DataBase
 
-import 'package:path_provider/path_provider.dart' show getApplicationDocumentsDirectory;
+import 'package:path_provider/path_provider.dart';
 
 import 'package:cinemapedia/domain/datasources/local_storage_datasource.dart';
 import 'package:cinemapedia/domain/entities/movie.dart';
@@ -21,7 +21,7 @@ class IsarDatasource extends LocalStorageDatasource {
     //abrimos la base de datos
     if ( Isar.instanceNames.isEmpty ) {
       final dir = await getApplicationDocumentsDirectory();
-      return await Isar.open([ MovieSchema ], inspector: true,directory: dir.path);
+      return await Isar.open([ MovieSchema ], inspector: true, directory: dir.path);
     }
 
     // o devolvemos la instancia que ya existia

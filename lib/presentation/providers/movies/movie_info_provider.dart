@@ -3,9 +3,9 @@
 // para no volver a cargar una pagina si ya fue cargada, execepto
 // si el usuario quiere ver un cambio nuevo 
 
-import 'package:cinemapedia/domain/entities/movie.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cinemapedia/presentation/providers/providers.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:cinemapedia/domain/entities/movie.dart';
 
 // implementacion del provider a ocupar
 final movieInfoProvider = StateNotifierProvider<MovieMapNotifier, Map<String, Movie>>((ref) {

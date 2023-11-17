@@ -33,10 +33,14 @@ class CustomBottonNanvigation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    final colors = Theme.of(context).colorScheme;
+
     return BottomNavigationBar(
       currentIndex: currentIndex,
       onTap: (value) => onItemTapped(context, value),
       elevation: 0,
+      selectedItemColor: colors.primary,
 
       // se crean los item de los botones de navegacion
       items: const [
@@ -46,8 +50,8 @@ class CustomBottonNanvigation extends StatelessWidget {
         ),
 
         BottomNavigationBarItem(
-          icon: Icon(Icons.label_outline),
-          label: 'Categorias'
+          icon: Icon(Icons.thumbs_up_down_outlined),
+          label: 'Populares'
         ),
 
         BottomNavigationBarItem(

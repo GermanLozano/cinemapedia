@@ -7,7 +7,7 @@ class MovieMapper {
     adult: moviedb.adult,
     backdropPath: (moviedb.backdropPath != '')
       ? 'https://image.tmdb.org/t/p/w500${moviedb.backdropPath}'
-      : 'https://sd.keepcalms.com/i/keep-calm-poster-not-found.png',
+      : 'https://sd.keepcalms.com/i-w600/keep-calm-poster-not-found.jpg',
     genreIds: moviedb.genreIds.map((e) => e.toString()).toList(),
     id: moviedb.id,
     originalLanguage: moviedb.originalLanguage,
@@ -16,7 +16,7 @@ class MovieMapper {
     popularity: moviedb.popularity,
     posterPath: (moviedb.posterPath != '')
       ? 'https://image.tmdb.org/t/p/w500${moviedb.posterPath}'
-      : 'https://movienewsletters.net/photos/000000h1.jpg',
+      : 'https://www.movienewz.com/img/films/poster-holder.jpg',
     releaseDate: moviedb.releaseDate != null 
       ? moviedb.releaseDate! 
       : DateTime.now(),
@@ -31,7 +31,7 @@ class MovieMapper {
     adult: moviedb.adult,
     backdropPath: (moviedb.backdropPath != '')
       ? 'https://image.tmdb.org/t/p/w500${moviedb.backdropPath}'
-      : 'https://sd.keepcalms.com/i/keep-calm-poster-not-found.png',
+      : 'https://sd.keepcalms.com/i-w600/keep-calm-poster-not-found.jpg',
     genreIds: moviedb.genres.map((e) => e.name).toList(),
     id: moviedb.id,
     originalLanguage: moviedb.originalLanguage,
@@ -40,7 +40,7 @@ class MovieMapper {
     popularity: moviedb.popularity,
     posterPath: (moviedb.posterPath != '')
       ? 'https://image.tmdb.org/t/p/w500${moviedb.posterPath}'
-      : 'https://sd.keepcalms.com/i/keep-calm-poster-not-found.png',
+      : 'https://sd.keepcalms.com/i-w600/keep-calm-poster-not-found.jpg',
     releaseDate: moviedb.releaseDate,
     title: moviedb.title,
     video: moviedb.video,

@@ -1,13 +1,14 @@
 
-import 'package:cinemapedia/infrastructure/models/moviedb/movie_details.dart';
 import 'package:dio/dio.dart';
 
 import 'package:cinemapedia/config/constants/environment.dart';
 import 'package:cinemapedia/domain/datasources/movies_datasource.dart';
 
-import 'package:cinemapedia/infrastructure/mappers/movie_mapper.dart';
-import 'package:cinemapedia/infrastructure/models/moviedb/moviedb_response.dart';
-import 'package:cinemapedia/domain/entities/movie.dart';
+import 'package:cinemapedia/infrastructure/models/models.dart';
+import 'package:cinemapedia/infrastructure/mappers/mappers.dart';
+
+import 'package:cinemapedia/domain/entities/entities.dart';
+
 
 class MoviedbDatasource extends MoviesDatasource{
 
@@ -24,7 +25,7 @@ class MoviedbDatasource extends MoviesDatasource{
   // metodo para no repetir los mismos procesos 
   List<Movie> _jsonToMovies( Map<String,dynamic> json){
 
-    final movieDBResponse = MovieDbResponse.fromJson(json); 
+    final movieDBResponse = MovieDbResponse.fromJson(json);
 
     final List<Movie> movies = movieDBResponse.results
     .where((moviedb) => moviedb.posterPath != 'no-poster')
@@ -107,6 +108,8 @@ class MoviedbDatasource extends MoviesDatasource{
     return movie;
   }
   
+
+  // para buscar la pelicula 
   @override
   Future<List<Movie>> searchMovies(String query) async{
 
@@ -121,5 +124,33 @@ class MoviedbDatasource extends MoviesDatasource{
     return _jsonToMovies(response.data);    
   }
   
+
+  // para obtener las peliculas similares   
+  @override
+  Future<List<Movie>> getSimilarMovies(int movieId) async {
+
+    final response = await dio.get('/movie/$movieId/similar');
+    return _jsonToMovies(response.data);
+
+  }
+  
+
+  // para obtener lo videos del triller de youtube 
+  @override
+  Future<List<Video>> getYoutubeVideosById(int movieId) async {
+
+    final response = await dio.get('/movie/$movieId/videos');
+    final moviedbVideosResponse = MoviedbVideosResponse.fromJson(response.data);
+    final videos = <Video>[];
+
+    for (final moviedbVideo in moviedbVideosResponse.results) {
+      if( moviedbVideo.site == 'YouTube' ){
+        final video = VideoMapper.moviedbVideoToEntity(moviedbVideo);
+        videos.add(video);
+      }
+    }
+
+    return videos;
+  }
   
 }

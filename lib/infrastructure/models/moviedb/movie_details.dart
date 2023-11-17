@@ -38,7 +38,7 @@ class MovieDetails {
     final List<Genre> genres;
     final String homepage;
     final int id;
-    final String imdbId;
+    final String? imdbId;
     final String originalLanguage;
     final String originalTitle;
     final String overview;
@@ -173,7 +173,7 @@ class ProductionCompany {
     final int id;
     final String? logoPath;
     final String name;
-    final String originCountry;
+    final String? originCountry;
 
     factory ProductionCompany.fromJson(Map<String, dynamic> json) => ProductionCompany(
         id: json["id"],
